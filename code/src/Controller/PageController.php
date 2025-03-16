@@ -32,17 +32,10 @@ class PageController extends AbstractController
             ->add(
                 'email_address',
                 EmailType::class,
-                /*[
-                    'attr' => [
-                        'class' => 'custom-class',
-                        'placeholder' => 'Your@email.com',
-                    ],
-                ],*/
+
             )
             ->add('full_name', TextType::class)
-            ->add('message', TextareaType::class)
-//            ->add('send', SubmitType::class)
-        ;
+            ->add('message', TextareaType::class);
 
         $form = $builder->getForm();
 
@@ -51,13 +44,11 @@ class PageController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            // add a flashing message, a "notification", for the user.
             $this->addFlash(
                 'success',
                 "Nous vous remercions d'avoir pris le temps de nous contacter. Nous allons vous répondre dans les plus brefs délais.",
             );
 
-            // redirect to an internal route (home page)
             return $this->redirectToRoute('app_default');
         }
 
@@ -81,22 +72,14 @@ class PageController extends AbstractController
     #[Route(name: "app_download_terms_file", path: "/download-terms-and-conditions")]
     public function downloadTermsAndConditions(): Response
     {
-        // check first if the file exists
-        // if not, then a 404 response
         if (!\file_exists('terms/Terms_And_Conditions2024.pdf')) {
-//            return new JsonResponse(['error' => 'file not found'], status: Response::HTTP_NOT_FOUND);
+            //            return new JsonResponse(['error' => 'file not found'], status: Response::HTTP_NOT_FOUND);
             return $this->json(['error' => 'file not found'], status: Response::HTTP_NOT_FOUND);
         }
 
-        // you can use the shortcut
         return $this->file(
             file: 'terms/Terms_And_Conditions2024.pdf',
             disposition: ResponseHeaderBag::DISPOSITION_ATTACHMENT, // (OR ResponseHeaderBag::DISPOSITION_INLINE)
         );
-
-       /* return new BinaryFileResponse(
-            file: 'terms/Terms_And_Conditions2024.pdf',
-            contentDisposition: ResponseHeaderBag::DISPOSITION_ATTACHMENT, (OR ResponseHeaderBag::DISPOSITION_INLINE)
-        );*/
     }
 }
