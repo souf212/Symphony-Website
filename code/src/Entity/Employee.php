@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Employee
 {
     #[ORM\Id]
@@ -23,21 +24,26 @@ class Employee
 
     #[ORM\Column(length: 255)]
     private ?string $identityCode = null;
- 
-
-    /**
-     * @var Collection<int, self>
-     */
-    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'departement')]
-    private Collection $employees;
 
     #[ORM\ManyToOne(inversedBy: 'employees')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Department $department = null;
 
+    /**
+     * @var Collection<int, Association>
+     */
+    #[ORM\ManyToMany(targetEntity: Association::class, inversedBy: 'employees')]
+    private Collection $subscriptions;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $locked = null;
+
     public function __construct()
     {
-        $this->employees = new ArrayCollection();
+        $this->subscriptions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -81,35 +87,6 @@ class Employee
         return $this;
     }
 
-    
-    /**
-     * @return Collection<int, self>
-     */
-    public function getEmployees(): Collection
-    {
-        return $this->employees;
-    }
-
-    public function addEmployee(self $employee): static
-    {
-        if (!$this->employees->contains($employee)) {
-            $this->employees->add($employee);
-            
-        }
-
-        return $this;
-    }
-
-    public function removeEmployee(self $employee): static
-    {
-        if ($this->employees->removeElement($employee)) {
-            // set the owning side to null (unless already changed)
-             
-        }
-
-        return $this;
-    }
-
     public function getDepartment(): ?Department
     {
         return $this->department;
@@ -118,6 +95,60 @@ class Employee
     public function setDepartment(?Department $department): static
     {
         $this->department = $department;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Association>
+     */
+    public function getSubscriptions(): Collection
+    {
+        return $this->subscriptions;
+    }
+
+    public function addSubscription(Association $subscription): static
+    {
+        if (!$this->subscriptions->contains($subscription)) {
+            $this->subscriptions->add($subscription);
+        }
+
+        return $this;
+    }
+
+    public function removeSubscription(Association $subscription): static
+    {
+        $this->subscriptions->removeElement($subscription);
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    #[ORM\PreUpdate]
+    public function setupUpdateDate(): void
+    {
+        $this->setUpdatedAt(new \DateTimeImmutable());
+    }
+
+    public function isLocked(): ?bool
+    {
+        return $this->locked;
+    }
+
+    public function setLocked(?bool $locked): static
+    {
+        $this->locked = $locked;
 
         return $this;
     }

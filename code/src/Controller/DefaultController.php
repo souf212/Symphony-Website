@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Blog;
+use App\Repository\BlogRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -13,8 +16,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class DefaultController extends AbstractController
 {
-    #[Route('/', name: 'app_default', /*stateless: true*/)]
-    public function index(Request $request): Response
+    #[Route('/default', name: 'app_default', /*stateless: true*/)]
+    public function index(Request $request, EntityManagerInterface $manager): Response
     {
         $session = $request->getSession();
 
@@ -24,6 +27,13 @@ class DefaultController extends AbstractController
         } else {
             $session->set('username', 'Issam');
         }
+
+        // get *all* blog instances
+        /** @var BlogRepository $blogs */
+        $repository = $manager->getRepository(Blog::class);
+        $blogs = $repository->getPublishedBlogs('Doctrine');
+
+        dump($blogs);
 
         return $this->render('default/index.html.twig', [
             'controller_name' => 'DefaultController',
