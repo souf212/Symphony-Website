@@ -44,17 +44,17 @@ class DefaultController extends AbstractController
     public function aboutUs(): Response
     {
         // enable this to redirect to my Github repository
-//        return new RedirectResponse("https://github.com/issamkhadiri1989");
+        //        return new RedirectResponse("https://github.com/issamkhadiri1989");
 
         // this is equivalent to the above code
-//        return $this->redirect("https://github.com/issamkhadiri1989");
+        //        return $this->redirect("https://github.com/issamkhadiri1989");
 
         return new RedirectResponse(
             status: Response::HTTP_MOVED_PERMANENTLY,
             url: "https://github.com/issamkhadiri1989",
         );
 
-//        return $this->render('default/about_us.html.twig');
+        //        return $this->render('default/about_us.html.twig');
     }
 
     #[Route(name: 'app_contact_us', path: '/contact-us')]
@@ -78,6 +78,6 @@ class DefaultController extends AbstractController
         return new JsonResponse(data: $content, json: true, /*status: Response::HTTP_OK*/);
 
         // here we need to pass an array to make if work.
-//        return $this->json(data: \json_decode($content), );
+        //        return $this->json(data: \json_decode($content), );
     }
 }
