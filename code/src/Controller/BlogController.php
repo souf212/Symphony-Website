@@ -1,7 +1,4 @@
-<?php
-
-// src/Controller/BlogController.php
-
+<?php 
 declare(strict_types=1);
 
 namespace App\Controller;
