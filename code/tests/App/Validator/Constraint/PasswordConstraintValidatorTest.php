@@ -23,9 +23,7 @@ class PasswordConstraintValidatorTest extends ConstraintValidatorTestCase
         $this->assertNoViolation();
     }
 
-    /**
-     * @dataProvider caseProvider
-     */
+    /** * @dataProvider caseProvider*/
     public function testInvalidPassword(PasswordConstraint $constraint, string $expected): void
     {
         $this->validator->validate('Abc123', $constraint);
