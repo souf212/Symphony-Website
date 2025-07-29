@@ -1,67 +1,107 @@
 services:
-    nginx:
-      image: nginx-nginx:latest
-      build:
-        context: ./infra/
-        args:
-          BUILD_ARGUMENT_ENV: dev
-        dockerfile: ./nginx/Dockerfile
-      restart: always
-      ports:
-        - "80:80"
-        - "443:443"
-      volumes:
-        - ./code:/var/www/html:ro,cached
-        - ./infra/nginx/conf.d:/etc/nginx/conf.d
-      depends_on:
-        - symfony
-      networks:
-        - symfony
+  nginx:
+    image: nginx-nginx:latest
+    build:
+      context: ./infra/
+      args:
+        BUILD_ARGUMENT_ENV: dev
+      dockerfile: ./nginx/Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./code:/var/www/html:ro,cached
+      - ./infra/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - symfony
+    networks:
+      - symfony
 
-    symfony:
-      image: php-symfony:latest
-      build:
-        context: ./infra/
-        dockerfile: ./php/Dockerfile
-      volumes:
-        - ./code:/var/www/html:cached
-        - ./infra/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
-        - ./infra/php/config/php.ini:/usr/local/etc/php/php.ini
-      depends_on:
-        - mysql
-      networks:
-        - symfony
+  symfony:
+    working_dir: /var/www/html
+    image: php-symfony:latest
+    build:
+      context: ./infra/
+      dockerfile: ./php/Dockerfile
+    volumes:
+      - ./code:/var/www/html:rw,cached
+      - ./infra/php/php-fpm.d/www.conf:/usr/local/etc/php-fpm.d/www.conf
+      - ./infra/php/config/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      - mysql
+    networks:
+      - symfony
 
-    mysql:
-      image: mysql
-      platform: linux/x86_64
-      command: --innodb-use-native-aio=${INNODB_USE_NATIVE_AIO:-1} --sql_mode=${SQL_MODE:-"ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"}
-      environment:
-        MYSQL_ROOT_PASSWORD: secret
-        MYSQL_DATABASE: symfony
-      ports:
-        - "3307:3306"
-      volumes:
-        - mysql:/var/lib/mysql:delegated
-      networks:
-        - symfony
+  mysql:
+    image: mysql
+    platform: linux/x86_64
+    command: --innodb-use-native-aio=${INNODB_USE_NATIVE_AIO:-1} --sql_mode=${SQL_MODE:-"ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"}
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: symfony
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql:/var/lib/mysql:delegated
+    networks:
+      - symfony
 
-    myadmin:
-      image: phpmyadmin/phpmyadmin:5
-      environment:
-        PMA_HOST: mysql
-      ports:
-        - "8080:80"
-      depends_on:
-        - mysql
-      networks:
-        - symfony
-      volumes:
-        - db_admin_data:/var/www/html
+  myadmin:
+    image: phpmyadmin/phpmyadmin:5
+    environment:
+      PMA_HOST: mysql
+    ports:
+      - "9292:80"
+    depends_on:
+      - mysql
+    networks:
+      - symfony
+    volumes:
+      - db_admin_data:/var/www/html
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - "18080:8080"
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    - /dev/disk/:/dev/disk:ro
+    - /var/run/docker.sock:/var/run/docker.sock:ro
+    - /var/lib/docker/containers:/var/lib/docker/containers:ro
+    privileged: true
+    devices:
+    - /dev/kmsg
+    networks:
+    - symfony
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - symfony
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - symfony
 
 volumes:
   db_admin_data:
   mysql:
+
+
 networks:
   symfony:
     name: symfony

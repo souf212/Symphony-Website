@@ -6,7 +6,6 @@ ARG BUILD_ARGUMENT_ENV=dev
 ENV APP_HOME /var/www/html
 
 # install all the dependencies and enable PHP modules
-
 RUN apt-get update && apt-get upgrade -y && apt-get install -y \
       bash-completion \
       fish \
@@ -74,5 +73,6 @@ RUN apt-get install -y git  libxslt-dev libldap2-dev libssl-dev
 # Installer les extensions PHP
 #COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 #RUN install-php-extensions gd bcmath zip xsl ldap
+
 
 USER root

@@ -1,0 +1,61 @@
+{{ form_start(form) }}
+{# Message d'erreur global #}
+{% if form.vars.errors|length > 0 %}
+    <div class="alert alert-danger">
+        {{ form_errors(form) }}
+    </div>
+{% endif %}
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        {{ form_label(form.invoiceNumber) }}
+        {{ form_widget(form.invoiceNumber, {'attr': {'class': 'form-control' ~ (form.invoiceNumber.vars.valid ? '' : ' is-invalid')}}) }}
+        {{ form_errors(form.invoiceNumber, {'attr': {'class': 'invalid-feedback'}}) }}
+        <small class="form-text text-muted">{{ form.invoiceNumber.vars.help|default('') }}</small>
+    </div>
+    <div class="col-md-6">
+        {{ form_label(form.invoiceDate) }}
+        {{ form_widget(form.invoiceDate, {'attr': {'class': 'form-control' ~ (form.invoiceDate.vars.valid ? '' : ' is-invalid')}}) }}
+        {{ form_errors(form.invoiceDate, {'attr': {'class': 'invalid-feedback'}}) }}
+        <small class="form-text text-muted">{{ form.invoiceDate.vars.help|default('') }}</small>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        {{ form_label(form.amount) }}
+        {{ form_widget(form.amount, {'attr': {'class': 'form-control' ~ (form.amount.vars.valid ? '' : ' is-invalid')}}) }}
+        {{ form_errors(form.amount, {'attr': {'class': 'invalid-feedback'}}) }}
+        <small class="form-text text-muted">{{ form.amount.vars.help|default('') }}</small>
+    </div>
+    <div class="col-md-6">
+        {{ form_label(form.status) }}
+        {{ form_widget(form.status, {'attr': {'class': 'form-control' ~ (form.status.vars.valid ? '' : ' is-invalid')}}) }}
+        {{ form_errors(form.status, {'attr': {'class': 'invalid-feedback'}}) }}
+        <small class="form-text text-muted">{{ form.status.vars.help|default('') }}</small>
+    </div>
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.note) }}
+    {{ form_widget(form.note, {'attr': {'class': 'form-control' ~ (form.note.vars.valid ? '' : ' is-invalid'), 'rows': '3'}}) }}
+    {{ form_errors(form.note, {'attr': {'class': 'invalid-feedback'}}) }}
+    <small class="form-text text-muted">{{ form.note.vars.help|default('') }}</small>
+</div>
+
+<div class="mb-3">
+    {{ form_label(form.client) }}
+    {{ form_widget(form.client, {'attr': {'class': 'form-control' ~ (form.client.vars.valid ? '' : ' is-invalid')}}) }}
+    {{ form_errors(form.client, {'attr': {'class': 'invalid-feedback'}}) }}
+    <small class="form-text text-muted">{{ form.client.vars.help|default('') }}</small>
+</div>
+
+<div class="mt-4">
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save me-1"></i> Enregistrer
+    </button>
+    <a href="{{ path('app_invoice_index') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+    </a>
+</div>
+{{ form_end(form) }}

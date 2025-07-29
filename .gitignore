@@ -1,2 +1,25 @@
-.idea/
-.idea/code/.idea
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/code/config/secrets/prod/prod.decrypt.private.php
+/code/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
+
+###> symfony/phpunit-bridge ###
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> symfony/asset-mapper ###
+/code/public/assets/
+/code/assets/vendor/
+###< symfony/asset-mapper ###

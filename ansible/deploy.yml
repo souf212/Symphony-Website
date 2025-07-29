@@ -1,0 +1,23 @@
+---
+- name: Deploy Symfony CRM App with Docker
+  hosts: local
+  gather_facts: false
+
+  vars:
+    docker_compose_file: "{{ playbook_dir }}/../compose.yaml"
+
+  tasks:
+    - name: Stop existing containers
+      ansible.builtin.command: docker compose -f {{ docker_compose_file }} down
+      args:
+        chdir: "{{ playbook_dir }}/.."
+
+    - name: Build Docker images from source
+      ansible.builtin.command: docker compose -f {{ docker_compose_file }} build
+      args:
+        chdir: "{{ playbook_dir }}/.."
+
+    - name: Start services
+      ansible.builtin.command: docker compose -f {{ docker_compose_file }} up -d --build
+      args:
+        chdir: "{{ playbook_dir }}/.."

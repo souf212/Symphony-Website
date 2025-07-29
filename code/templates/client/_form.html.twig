@@ -1,0 +1,83 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+
+{% if form.vars.errors|length > 0 %}
+    <div class="alert alert-danger">
+        {{ form_errors(form) }}
+    </div>
+{% endif %}
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form_label(form.managerFirstName, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.managerFirstName, {'attr': {'class': 'form-control' ~ (form.managerFirstName.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.managerFirstName, {'attr': {'class': 'invalid-feedback'}}) }}
+                <small class="form-text text-muted">{{ form.managerFirstName.vars.help|default('') }}</small>
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.managerLastName, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.managerLastName, {'attr': {'class': 'form-control' ~ (form.managerLastName.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.managerLastName, {'attr': {'class': 'invalid-feedback'}}) }}
+                <small class="form-text text-muted">{{ form.managerLastName.vars.help|default('') }}</small>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.companyName, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.companyName, {'attr': {'class': 'form-control' ~ (form.companyName.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.companyName, {'attr': {'class': 'invalid-feedback'}}) }}
+            <small class="form-text text-muted">{{ form.companyName.vars.help|default('') }}</small>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form_label(form.phone, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.phone, {'attr': {'class': 'form-control' ~ (form.phone.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.phone, {'attr': {'class': 'invalid-feedback'}}) }}
+                <small class="form-text text-muted">{{ form.phone.vars.help|default('') }}</small>
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.user, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.user, {'attr': {'class': 'form-select' ~ (form.user.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.user, {'attr': {'class': 'invalid-feedback'}}) }}
+                <small class="form-text text-muted">{{ form.user.vars.help|default('') }}</small>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.address, null, {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.address, {'attr': {'class': 'form-control' ~ (form.address.vars.valid ? '' : ' is-invalid')}}) }}
+            {{ form_errors(form.address, {'attr': {'class': 'invalid-feedback'}}) }}
+            <small class="form-text text-muted">{{ form.address.vars.help|default('') }}</small>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                {{ form_label(form.city, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.city, {'attr': {'class': 'form-control' ~ (form.city.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.city, {'attr': {'class': 'invalid-feedback'}}) }}
+                <small class="form-text text-muted">{{ form.city.vars.help|default('') }}</small>
+            </div>
+            <div class="col-md-6">
+                {{ form_label(form.country, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.country, {'attr': {'class': 'form-select' ~ (form.country.vars.valid ? '' : ' is-invalid')}}) }}
+                {{ form_errors(form.country, {'attr': {'class': 'invalid-feedback'}}) }}
+                <small class="form-text text-muted">{{ form.country.vars.help|default('') }}</small>
+            </div>
+        </div>
+
+
+        {{ form_rest(form) }}
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i>{{ button_label|default('Enregistrer') }}
+        </button>
+        <a href="{{ path('app_client_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Retour à la liste
+        </a>
+    </div>
+</div>
+{{ form_end(form) }}

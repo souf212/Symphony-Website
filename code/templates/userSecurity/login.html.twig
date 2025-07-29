@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Login{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-lg border-0 rounded-lg">
+                    <div class="card-header text-white text-center" style="background-color: cornflowerblue;">
+                        <h3 class="my-3">Se Connecter</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if error %}
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                {{ error.messageKey|trans(error.messageData, 'security') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endif %}
+
+                        <form method="POST" action="/login">
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="username" name="_username"
+                                       value="{{ last_username }}" placeholder="exemple@exemple.com" required>
+                                <label for="username">Adresse email</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="password" class="form-control" id="password" name="_password"
+                                       placeholder="******" autocomplete="off" required>
+                                <label for="password">Mot de passe</label>
+                            </div>
+
+
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-lg text-white" style="background-color: cornflowerblue;">Connexion</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
